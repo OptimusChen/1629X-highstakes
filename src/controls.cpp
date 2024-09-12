@@ -1,48 +1,79 @@
 #include "controls.hpp"
 #include "main.h"
 
+
 namespace controls {
-    auto intake_lift = ADIDigitalOut(INTAKE_LIFT);
-    auto mogo = ADIDigitalOut(MOGO);
+   auto corner_arm = ADIDigitalOut(CORNER_ARM);
+   auto intake_lift = ADIDigitalOut(INTAKE_LIFT);
+   auto mogo = ADIDigitalOut(MOGO);
 
-	void intake() {
-		c::motor_move(HOOKS, 127);
-	}
 
-    void begin_intake(int duration, bool async) {
-        if (async) {
-            pros::Task intake_task([=]() {
-                begin_intake(duration, false);
-            });
-            return;
-        }
+   void outtake() {
+       c::motor_move(HOOKS, -127);
+   }
 
-        intake();
 
-        if (duration == -1) return;
+   void intake() {
+       c::motor_move(HOOKS, 127);
+   }
 
-        delay(duration);
 
-        stop_intake();
-    }
+   void begin_intake(int duration, bool async, std::function<void()> callback) {
+       if (async) {
+           pros::Task intake_task([=]() {
+               begin_intake(duration, false, nullptr);
 
-    void stop_intake() {
-        c::motor_move_velocity(HOOKS, 0);
-    }
 
-	void clamp_mogo() {
-		mogo.set_value(true);
-	}
+               if (callback) callback();
+           });
+           return;
+       }
 
-	void release_mogo() {
-		mogo.set_value(false);
-	}
 
-    void raise_intake() {
-		intake_lift.set_value(true);
-	}
+       intake();
 
-	void lower_intake() {
-		intake_lift.set_value(false);
-	}
+
+       if (duration == -1) return;
+
+
+       delay(duration);
+
+
+       stop_intake();
+   }
+
+
+   void stop_intake() {
+       c::motor_move_velocity(HOOKS, 0);
+   }
+
+
+   void clamp_mogo() {
+       mogo.set_value(true);
+   }
+
+
+   void release_mogo() {
+       mogo.set_value(false);
+   }
+
+
+   void raise_intake() {
+       intake_lift.set_value(true);
+   }
+
+
+   void lower_intake() {
+       intake_lift.set_value(false);
+   }
+
+
+   void activate_corner_arm() {
+       corner_arm.set_value(true);
+   }
+
+
+   void lower_corner_arm() {
+       corner_arm.set_value(false);
+   }
 }
