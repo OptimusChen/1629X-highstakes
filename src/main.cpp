@@ -35,7 +35,7 @@ void screen_pose() {
 
 void auton_print() {
     while (true) {
-        pros::lcd::print(0, "a: %d", sec::auton); // print the x position
+        pros::lcd::print(0, "SELECTED: %d", sec::auton); // print the x position
         pros::delay(10);
     }
 }   
@@ -76,15 +76,12 @@ void competition_initialize() {}
 
 // "Blue WP (+)","Blue Elims (+)","Blue (-)","\n","Red WP (+)","Red Elims (+)","Red (-)","\n","None","Skills"
 void autonomous() {
-    auton::blue_plus_side_awp();
-    return;
-
     switch (sec::auton) {
         case 0:
             auton::blue_plus_side_awp();
             break;
         case 1:
-            auton::blue_plus_side_sweep();
+            // auton::blue_plus_side_sweep();
             break;
         case 2:
             auton::blue_negative();
@@ -93,7 +90,7 @@ void autonomous() {
             auton::red_plus_side_awp();
             break;
         case 4:
-            auton::red_plus_side_sweep();
+            // auton::red_plus_side_sweep();
             break;
         case 5:
             auton::red_negative();

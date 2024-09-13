@@ -7,16 +7,13 @@ namespace controls {
    auto intake_lift = ADIDigitalOut(INTAKE_LIFT);
    auto mogo = ADIDigitalOut(MOGO);
 
-
    void outtake() {
        c::motor_move(HOOKS, -127);
    }
 
-
    void intake(int speed) {
        c::motor_move(HOOKS, speed);
    }
-
 
    void begin_intake(int duration, bool async, std::function<void()> callback, int speed) {
        if (async) {
