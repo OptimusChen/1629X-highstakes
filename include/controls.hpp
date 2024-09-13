@@ -61,7 +61,7 @@ namespace controls {
    void raise_intake();
    void lower_intake();
   
-   void intake();
+   void intake(int speed = 127);
    void outtake();
    void stop_intake();
 
@@ -70,5 +70,5 @@ namespace controls {
    void lower_corner_arm();
 
 
-   void begin_intake(int duration, bool async, std::function<void()> callback);
+   void begin_intake(int duration, bool async, std::function<void()> callback, int speed = 127);
 }

@@ -76,6 +76,9 @@ void competition_initialize() {}
 
 // "Blue WP (+)","Blue Elims (+)","Blue (-)","\n","Red WP (+)","Red Elims (+)","Red (-)","\n","None","Skills"
 void autonomous() {
+    auton::blue_plus_side_awp();
+    return;
+
     switch (sec::auton) {
         case 0:
             auton::blue_plus_side_awp();

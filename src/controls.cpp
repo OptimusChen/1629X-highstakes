@@ -13,15 +13,15 @@ namespace controls {
    }
 
 
-   void intake() {
-       c::motor_move(HOOKS, 127);
+   void intake(int speed) {
+       c::motor_move(HOOKS, speed);
    }
 
 
-   void begin_intake(int duration, bool async, std::function<void()> callback) {
+   void begin_intake(int duration, bool async, std::function<void()> callback, int speed) {
        if (async) {
            pros::Task intake_task([=]() {
-               begin_intake(duration, false, nullptr);
+               begin_intake(duration, false, nullptr, speed);
 
 
                if (callback) callback();

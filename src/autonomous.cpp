@@ -79,100 +79,10 @@ namespace auton {
         return chassis.getPose();
     }
 
-    void red_plus_side_sweep() {
-        chassis.setPose(Pose(-56, -12.5, 0));
-        
-        chassis.moveToPoint(-56, -0.5, 4000, MoveToPointParams(true, ACCURATE), false);
-
-        outtake();
-        delay(150);
-        stop_intake();
-
-        chassis.turnToHeading(90, 1000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE), false);
-
-        begin_intake(1500, false, nullptr);
-
-        raise_intake();
-
-        chassis.swingToHeading(120, DriveSide::RIGHT, 500, SwingToHeadingParams(AngularDirection::AUTO, ACCURATE), false);
-
-        begin_intake(500, true, [=]() {
-            lower_intake();
-        });
-
-        chassis.moveToPoint(-46, -2, 2000, MoveToPointParams(true, ACCURATE), false);
-
-        begin_intake(250, false, nullptr);
-
-        Task bruh2([=]() {
-            c::motor_move_velocity(HOOKS, 20);
-
-            delay(2000);
-
-            c::motor_move_velocity(HOOKS, 0);
-        });
-
-        chassis.turnToHeading(300, 500, TurnToHeadingParams(AngularDirection::AUTO, MID), false);
-
-        chassis.moveToPose(-23.5, -23.5, 300, 2000, MoveToPoseParams(false, 0, 0.6, MID), false);
-
-        clamp_mogo();
-
-        intake();
-
-        delay(1000);
-
-        chassis.turnToHeading(180, 1000, TurnToHeadingParams(AngularDirection::CCW_COUNTERCLOCKWISE, MID), false);
-
-        c::motor_move_velocity(HOOKS, 0);
-        release_mogo();
-
-        intake();
-        
-        Task bruh1([=]() {
-            delay(1000);
-
-            c::motor_move_velocity(HOOKS, 0);
-        });
-
-        chassis.moveToPoint(-20.5, -50, 2000, MoveToPointParams(true, MID), false);
-
-        chassis.swingToHeading(250, DriveSide::LEFT, 1000, SwingToHeadingParams(AngularDirection::AUTO, MID), false);
-
-        chassis.moveToPoint(-1.5, -50, 1000, MoveToPointParams(false, MID), false);
-
-        delay(500);
-
-        clamp_mogo();
-
-        delay(150);
-
-        intake();
-
-        activate_corner_arm();
-
-        Task bruh3([=]() {
-            delay(1000);
-
-            c::motor_move_velocity(HOOKS, 0);
-        });
-
-        Task bruh([=]() {
-            delay(2000);
-
-            release_mogo();
-        });
-
-        chassis.moveToPoint(-55, -62.5, 3000, MoveToPointParams(true, MID), false);
-
-        chassis.turnToHeading(0, 2000, TurnToHeadingParams(AngularDirection::CCW_COUNTERCLOCKWISE), false);
-        return;
-    }
-
     void blue_plus_side_awp() {
         chassis.setPose(Pose(58, -12.5, 0));
 
-        chassis.moveToPoint(58, 0, 4000, MoveToPointParams(true, ACCURATE), false);
+        chassis.moveToPoint(58, -0.5, 4000, MoveToPointParams(true, ACCURATE), false);
 
         outtake();
         delay(150);
@@ -180,61 +90,58 @@ namespace auton {
 
         chassis.turnToHeading(270, 2000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE / 2), false);
 
-        // chassis.moveToPose(57, 0, 270, 2000, MoveToPoseParams(false, 0, 0.6, ACCURATE), false);
-
         left_motor_group.move(-20);
         right_motor_group.move(-20);
 
-        delay(300);
+        delay(400);
 
         left_motor_group.brake();
         right_motor_group.brake();
 
-        begin_intake(1500, false, nullptr);
+        begin_intake(1000, false, nullptr);
 
         raise_intake();
-
-        chassis.swingToHeading(240, DriveSide::RIGHT, 500, SwingToHeadingParams(AngularDirection::AUTO, ACCURATE), false);
 
         begin_intake(250, true, [=]() {
             lower_intake();
         });
 
-        chassis.moveToPoint(46, -8, 2000, MoveToPointParams(true, ACCURATE), false);
+        chassis.moveToPoint(46, -4, 2000, MoveToPointParams(true, ACCURATE), false);
 
-        begin_intake(800, false, nullptr);
+        begin_intake(500, false, nullptr);
 
         Task bruh2([=]() {
             c::motor_move_velocity(HOOKS, 20);
 
-            delay(1000);
+            delay(500);
 
             c::motor_move_velocity(HOOKS, 0);
         });
 
-        // chassis.turnToHeading(315, 500, TurnToHeadingParams(AngularDirection::AUTO, MID), false);
-        // chassis.moveToPose(26, -20, 25, 4000, MoveToPoseParams(false, 0, 0.3, FAST), false);
-
-        chassis.turnToHeading(45, 1000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE), false);
-        chassis.moveToPoint(27.5, -21.5, 2000, MoveToPointParams(false, MID), false);
+        chassis.moveToPose(25.8, -22.7, 45, 3000, MoveToPoseParams(false, 0, 0.6, FAST), false);
 
         clamp_mogo();
 
-        intake();
+        intake(100);
 
-        delay(2000);
+        delay(1000);
 
         chassis.turnToHeading(180, 1000, TurnToHeadingParams(AngularDirection::CCW_COUNTERCLOCKWISE, MID), false);
 
         c::motor_move_velocity(HOOKS, 0);
 
-        intake();
+        intake(100);
 
         chassis.moveToPoint(20.5, -55, 3000, MoveToPointParams(true, MID), false);
 
-        chassis.moveToPose(16.5, -7.5, 270, 4000, MoveToPoseParams(true, 0, 0.6, MID), false);
+        delay(1500);
 
-        release_mogo();
+        Task bruh([=]() {
+            delay(1000);
+            release_mogo();
+        });
+
+        chassis.moveToPose(16.5, -7.5, 270, 4000, MoveToPoseParams(true, 0, 0.6, MID), false);
     }
 
     // red awp
@@ -295,131 +202,6 @@ namespace auton {
 
         release_mogo();
     }
-
-    void blue_plus_side_sweep() {
-        chassis.setPose(Pose(-56, 12.5, 180));
-        
-        chassis.moveToPoint(-56, 0.5, 4000, MoveToPointParams(true, ACCURATE), false);
-
-
-        outtake();
-        delay(150);
-        stop_intake();
-
-
-        chassis.turnToHeading(90, 1000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE), false);
-
-
-        begin_intake(750, false, nullptr);
-
-
-        raise_intake();
-
-
-        chassis.swingToHeading(60, DriveSide::RIGHT, 500, SwingToHeadingParams(AngularDirection::AUTO, ACCURATE), false);
-
-
-        begin_intake(500, true, [=]() {
-            lower_intake();
-        });
-
-
-        chassis.moveToPoint(-46, 2, 2000, MoveToPointParams(true, ACCURATE), false);
-
-
-        begin_intake(250, false, nullptr);
-
-
-        Task bruh2([=]() {
-            c::motor_move_velocity(HOOKS, 20);
-
-
-            delay(2000);
-
-
-            c::motor_move_velocity(HOOKS, 0);
-        });
-
-
-        chassis.turnToHeading(240, 500, TurnToHeadingParams(AngularDirection::AUTO, MID), false);
-
-
-        chassis.moveToPose(-23.5, 20, -135, 2000, MoveToPoseParams(false, 0, 0.6, MID), false);
-
-
-        clamp_mogo();
-
-
-        intake();
-
-
-        delay(1000);
-
-
-        chassis.turnToHeading(0, 1000, TurnToHeadingParams(AngularDirection::CCW_COUNTERCLOCKWISE, MID), false);
-
-
-        c::motor_move_velocity(HOOKS, 0);
-        release_mogo();
-
-
-        intake();
-        
-        Task bruh1([=]() {
-            delay(1000);
-
-
-            c::motor_move_velocity(HOOKS, 0);
-        });
-
-
-        chassis.moveToPoint(-20.5, 50, 2000, MoveToPointParams(true, MID), false);
-
-
-        chassis.swingToHeading(-75, DriveSide::LEFT, 1000, SwingToHeadingParams(AngularDirection::AUTO, MID), false);
-
-
-        chassis.moveToPoint(-1.5, 50, 1000, MoveToPointParams(false, MID), false);
-
-
-        delay(500);
-
-
-        clamp_mogo();
-
-
-        delay(150);
-
-
-        intake();
-
-
-        activate_corner_arm();
-
-
-        Task bruh3([=]() {
-            delay(1000);
-
-
-            c::motor_move_velocity(HOOKS, 0);
-        });
-
-
-        Task bruh([=]() {
-            delay(2000);
-
-
-            release_mogo();
-        });
-
-
-        chassis.moveToPoint(-55, 62.5, 3000, MoveToPointParams(true, MID), false);
-
-
-        chassis.turnToHeading(180, 2000, TurnToHeadingParams(AngularDirection::CCW_COUNTERCLOCKWISE), false);
-        return;
-    }
-
 
     void plus_side_wp() {
         chassis.setPose(Pose(-56, 12.5, 180));
