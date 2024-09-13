@@ -109,8 +109,12 @@ namespace auton {
    void red_plus_side_sweep();
 
    // blue
+   void blue_plus_side_awp();
+   void blue_plus_side_sweep();
 
-   void four_ring_negative();
+   void red_negative();
+   void blue_negative();
+   
    void plus_side_wp();
    void plus_side_sweep();
    // void awp_negative();
