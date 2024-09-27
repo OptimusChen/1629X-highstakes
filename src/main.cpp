@@ -1,5 +1,6 @@
 #include "main.h"
 #include "pid.hpp"
+#include "arm.hpp"
 #include "controls.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
@@ -11,6 +12,18 @@
 
 #include "s.hpp"
 #include "liblvgl/lvgl.h"
+
+/*
+
+
+    ██╗░░░██╗██████╗░  ███╗░░░███╗░█████╗░███╗░░░███╗  ██╗░██████╗  ░██████╗░░█████╗░██╗░░░██╗
+    ██║░░░██║██╔══██╗  ████╗░████║██╔══██╗████╗░████║  ██║██╔════╝  ██╔════╝░██╔══██╗╚██╗░██╔╝
+    ██║░░░██║██████╔╝  ██╔████╔██║██║░░██║██╔████╔██║  ██║╚█████╗░  ██║░░██╗░███████║░╚████╔╝░
+    ██║░░░██║██╔══██╗  ██║╚██╔╝██║██║░░██║██║╚██╔╝██║  ██║░╚═══██╗  ██║░░╚██╗██╔══██║░░╚██╔╝░░
+        ╚██████╔╝██║░░██║  ██║░╚═╝░██║╚█████╔╝██║░╚═╝░██║  ██║██████╔╝  ╚██████╔╝██║░░██║░░░██║░░░
+    ░╚═════╝░╚═╝░░╚═╝  ╚═╝░░░░░╚═╝░╚════╝░╚═╝░░░░░╚═╝  ╚═╝╚═════╝░  ░╚═════╝░╚═╝░░╚═╝░░░╚═╝░░░
+
+*/
 
 using namespace pros;
 using namespace pros::c;
@@ -105,19 +118,6 @@ void autonomous() {
     }
 }
 
-
-float arm_pos() {
-    Rotation armRotation(ARM_ROT);
-
-    float measure = armRotation.get_position() / 100.0f;
-
-    if (measure > 350 || measure < 10) return 0;
-
-    if (measure < 360) return measure;
-    return measure - 360;
-}
-
-
 void opcontrol() {
     auto mogo = ADIDigitalOut(MOGO);
     auto corner_arm = ADIDigitalOut(CORNER_ARM);
@@ -126,13 +126,10 @@ void opcontrol() {
 
     motor_set_gearing(HOOKS, E_MOTOR_GEAR_BLUE);
 
-    Motor arm = Motor(ARM, MotorGears::red, MotorUnits::degrees);
-    Rotation armRotation(ARM_ROT);
+    Motor a(ARM);
+    Rotation r(ARM_ROT);
 
-    armRotation.reset_position();
-
-    arm.set_brake_mode_all(motor_brake_mode_e_t::E_MOTOR_BRAKE_HOLD);
-    arm.tare_position();
+    Arm arm(&a, &r);
 
     std::unordered_map<controller_digital_e_t, std::function<void()>> toggle_controls;
     std::unordered_map<controller_digital_e_t, std::pair<std::function<void(bool)>, std::function<void()>>> hold_controls;
@@ -163,78 +160,28 @@ void opcontrol() {
         }
     ));
 
-    // 1.5, 50, 10000
-
-    // initialize arm PID
-    lib::PID armPid(
-        0.8, // kP
-        0, // kI
-        2 // kD
-    );
-    // arm targets
-    const float rest = 0;
-    const float load = 28;
-    const float inter = 60;
-    const float limit = 125;
-
-    // arm error and target
-    float armError = 0;
-    float armTarget = rest;
-    bool useArmPid = true;
-    bool canControl = true;
-    bool canScore = armTarget != rest;
-
-    armPid.set_winduprange(5);
-    armPid.reset();
-
-    // on single press, set arm target to primed/rest position and enable PID
-    // toggle_controls.emplace(E_CONTROLLER_DIGITAL_L1, [&]() {
-    //     armTarget = load;
-    //     useArmPid = true;
-    // });
-
     toggle_controls.emplace(E_CONTROLLER_DIGITAL_L2, [&]() {
-        armTarget = rest;
-        useArmPid = true;
-        canScore = false;
+        arm.toggle_l2();
     });
 
     // on hold, the arm acts as a normal arm
     hold_controls.emplace(E_CONTROLLER_DIGITAL_L1, std::make_pair(
         [&](bool firstActivation) {
             if (firstActivation) return;
-            if (!canControl) return;
-            if (!canScore) return;
-            useArmPid = false;
-            arm.move(127);
+            arm.hold_l1();  
         },
         [&]() {
-            arm.brake();
-            useArmPid = true;
-            canScore = true;
-
-            if (armTarget == load) {
-                armTarget = inter;
-            } else {
-                armTarget = load;
-            }
-
-            if (arm_pos() > inter) {
-                armTarget = load;
-            } 
+            arm.release_l1();
         }
     ));
 
     hold_controls.emplace(E_CONTROLLER_DIGITAL_L2, std::make_pair(
         [&](bool firstActivation) {
             if (firstActivation) return;
-            useArmPid = false;
+            arm.hold_l2();
         },
         [&]() {
-            arm.brake();
-            armTarget = rest;
-            useArmPid = true;
-            canScore = false;
+            arm.release_l2();
         }
     ));
 
@@ -264,34 +211,7 @@ void opcontrol() {
         auton::arcade(leftY, rightX);
 
         // if arm PID is enabled recalculate the error and set voltage based off PID output
-        if (useArmPid == true) {
-            armError = armTarget - arm_pos();
-            float value = armPid.calculate(armError);
-            int sign = int(value/abs(value));
-
-            if (abs(armError) > 70) {
-                arm.move(127 * sign);
-            } else {
-                arm.move(sign < 0 ? value * 0.5 : value * 2);
-            }
-        }
-
-        // if the arm is at the code limit, try to reset it backwards to stop it
-        if (arm_pos() >= limit && (held.contains(E_CONTROLLER_DIGITAL_L1) || held.contains(E_CONTROLLER_DIGITAL_L2))) {
-            canControl = false;
-            useArmPid = false;
-
-            arm.move_velocity(0);
-        } else {
-            canControl = true;
-        }
-
-        if (arm_pos() < 1 && arm_pos() > 0) {
-            armTarget = rest;
-
-            arm.tare_position();
-            armPid.reset();
-        }
+        arm.tick(held);
 
         for (auto control : toggle_controls) {
             if (master.get_digital_new_press(control.first) && !held.contains(control.first)) {

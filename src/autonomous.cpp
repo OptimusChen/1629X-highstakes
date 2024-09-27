@@ -1,4 +1,5 @@
 #include "main.h"
+#include "arm.hpp"
 #include "controls.hpp"
 
 using namespace controls;
@@ -484,27 +485,58 @@ namespace auton {
     */
 
     void skills() {
+        Motor a(ARM);
+        Rotation r(ARM_ROT);
+
+        Arm arm(&a, &r);
+
+        Task bruh2([&]() {
+            while (true) {
+                arm.tick({});
+
+                delay(1);
+            }
+        });
+
         chassis.setPose(Pose(-60, 0, 90));
 
         begin_intake(500, false, nullptr);
 
-        chassis.moveToPose(-50, -22, 310, 3000, MoveToPoseParams(false, 0, 0.6, MID), false);
+        chassis.moveToPose(-50, -22, 310, 3000, MoveToPoseParams(false, 0, 0.6, MID), false); //Move to Mogo
 
         clamp_mogo();
         intake();
 
-        chassis.turnToHeading(90, 2000, TurnToHeadingParams(AngularDirection::AUTO, FAST), false);
+        chassis.turnToHeading(90, 2000, TurnToHeadingParams(AngularDirection::AUTO, FAST), false); //Turn to first ring
 
-        chassis.moveToPoint(-23, -23, 2000, MoveToPointParams(true, MID), false);
-        chassis.moveToPoint(0, 0, 2000, MoveToPointParams(true, MID), false);
-        chassis.moveToPoint(23, -23, 2000, MoveToPointParams(true, MID), false);
+        chassis.moveToPoint(-23, -23, 2000, MoveToPointParams(true, MID), false); // ring 1
+        chassis.moveToPoint(0, 0, 2000, MoveToPointParams(true, MID), false); //center ring
+        chassis.moveToPoint(23, -23, 2000, MoveToPointParams(true, MID), false); // ring 2
+        chassis.moveToPoint(23, -48, 2000, MoveToPointParams(true, MID), false); // ring 2
         //raise arm
-        chassis.moveToPoint(0, -60, 2000, MoveToPointParams(true, MID), false);
+        arm.prime();
+        chassis.moveToPose(0, -60, 180, 2000, MoveToPoseParams(true, MID), false);
         //move to the wallstake
+        //chassis.turnToHeading(180, 2000, TurnToHeadingParams(AngularDirection::AUTO, FAST), false);
+        chassis.moveToPose(0, -70, 180, 1000, MoveToPoseParams(true, MID), false);
+
+        chassis.turnToHeading(270, 2000, TurnToHeadingParams(AngularDirection::AUTO, FAST), false); //Turn to first ring
+
+        // left_motor_group.move(80);
+        // right_motor_group.move(80);
+
+        // delay(200);
+
+        // left_motor_group.brake();
+        // right_motor_group.brake();
         //lokc in an score
+        stop_intake();
+        arm.score();
+        delay(3000);
+        intake();
 
 
-
+        chassis.moveToPoint(0, -48, 2000, MoveToPointParams(false, MID), false); // ring 2
         /*chassis.moveToPoint(-20, -23.5, 2000, MoveToPointParams(true, MID), false);
         chassis.moveToPoint(-23.5, -51, 2000, MoveToPointParams(true, MID), false);
         chassis.moveToPoint(-63.5, -51, 2000, MoveToPointParams(true, MID), false);
