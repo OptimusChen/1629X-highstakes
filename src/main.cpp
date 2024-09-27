@@ -65,6 +65,8 @@ void initialize() {
 
     auton::calibrate_drivetrain();
 
+    auton::skills();
+
     pros::Task intake_task([=]() {
         screen_pose();
     });
@@ -81,7 +83,7 @@ void autonomous() {
             auton::blue_plus_side_awp();
             break;
         case 1:
-            // auton::blue_plus_side_sweep();
+            auton::blue_plus_side_sweep();
             break;
         case 2:
             auton::blue_negative();
@@ -90,7 +92,7 @@ void autonomous() {
             auton::red_plus_side_awp();
             break;
         case 4:
-            // auton::red_plus_side_sweep();
+            auton::red_plus_side_sweep();
             break;
         case 5:
             auton::red_negative();
@@ -98,8 +100,7 @@ void autonomous() {
         case 6:
             break;
         case 7:
-            // bruh
-            // auton::skills();
+            auton::skills();
             break;
     }
 }
@@ -121,7 +122,7 @@ void opcontrol() {
     auto mogo = ADIDigitalOut(MOGO);
     auto corner_arm = ADIDigitalOut(CORNER_ARM);
     auto lift_intake = ADIDigitalOut(INTAKE_LIFT);
-    bool mogoActive = false;
+    bool mogoActive = true;
 
     motor_set_gearing(HOOKS, E_MOTOR_GEAR_BLUE);
 
@@ -136,6 +137,8 @@ void opcontrol() {
     std::unordered_map<controller_digital_e_t, std::function<void()>> toggle_controls;
     std::unordered_map<controller_digital_e_t, std::pair<std::function<void(bool)>, std::function<void()>>> hold_controls;
     std::unordered_set<controller_digital_e_t> held;
+
+    mogo.set_value(mogoActive);
 
     toggle_controls.emplace(E_CONTROLLER_DIGITAL_RIGHT, [&]() {
         mogoActive = !mogoActive;

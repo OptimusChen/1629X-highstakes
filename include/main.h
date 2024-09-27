@@ -118,4 +118,6 @@ namespace auton {
    void plus_side_wp();
    void plus_side_sweep();
    // void awp_negative();
+
+   void skills();
 }
