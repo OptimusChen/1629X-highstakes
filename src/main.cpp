@@ -78,7 +78,7 @@ void initialize() {
 
     auton::calibrate_drivetrain();
 
-    auton::skills();
+    // auton::red_plus_side_sweep();
 
     pros::Task intake_task([=]() {
         screen_pose();

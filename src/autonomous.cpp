@@ -19,7 +19,7 @@ namespace auton {
     pros::Rotation horizontal_encoder(-HORIZONTAL);
     pros::Rotation vertical_encoder(VERTICAL);
 
-    lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, -3.0f);
+    lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, -4.0f);
     lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, 0.7f);
 
     OdomSensors sensors {
@@ -85,107 +85,163 @@ namespace auton {
     */
 
     void red_plus_side_sweep() {
-        chassis.setPose(Pose(-58, -12.5, 0));
+        // chassis.setPose(Pose(-58, -12.5, 0));
 
-        chassis.moveToPoint(-58, -0.5, 4000, MoveToPointParams(true, ACCURATE), false);
+        // chassis.moveToPoint(-58, -0.5, 4000, MoveToPointParams(true, ACCURATE), false);
 
-        outtake();
-        delay(150);
-        stop_intake();
+        // outtake();
+        // delay(150);
+        // stop_intake(); 
 
-        chassis.turnToHeading(90, 2000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE / 2), false);
+        // raise_intake();
 
-        left_motor_group.move(-20);
-        right_motor_group.move(-20);
+        // chassis.turnToHeading(-270, 2000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE / 2), false);
 
-        delay(200);
+        // left_motor_group.move(-20);
+        // right_motor_group.move(-20);
 
-        left_motor_group.brake();
-        right_motor_group.brake();
+        // delay(300);
 
-        begin_intake(1000, false, nullptr);
+        // left_motor_group.brake();
+        // right_motor_group.brake();
 
-        raise_intake();
+        // begin_intake(1000, false, nullptr);
 
-        begin_intake(250, true, [=]() {
-            lower_intake();
-        });
+        // begin_intake(1000, true, [=]() {
+        //     lower_intake();
+        // });
 
-        chassis.moveToPoint(-46, -4, 2000, MoveToPointParams(true, ACCURATE), false);
+        // chassis.moveToPoint(-45, -3, 2000, MoveToPointParams(true, ACCURATE), false);
 
-        begin_intake(500, false, nullptr);
+        // begin_intake(500, false, nullptr);
 
-        Task bruh2([=]() {
-            c::motor_move_velocity(HOOKS, 20);
+        // Task bruh2([=]() {
+        //     c::motor_move_velocity(HOOKS, 20);
 
-            delay(500);
+        //     delay(500);
 
-            c::motor_move_velocity(HOOKS, 0);
-        });
+        //     c::motor_move_velocity(HOOKS, 0);
+        // });
 
-        chassis.moveToPose(-26.5, -22.7, 315, 2500, MoveToPoseParams(false, 0, 0.6, FAST), false);
+        // chassis.moveToPose(-26.5, -22.7, -45, 2500, MoveToPoseParams(false, 0, 0.6, FAST), false);
+
+        // clamp_mogo();
+
+        // intake(100);
+
+        // delay(1000);
+
+        // chassis.turnToHeading(-180, 1000, TurnToHeadingParams(AngularDirection::CCW_COUNTERCLOCKWISE, MID), false);
+
+        // c::motor_move_velocity(HOOKS, 0);
+
+        // intake(100);
+
+        chassis.setPose(Pose(-54, -20, 270));
+
+        chassis.moveToPoint(-22, -20, 2000, MoveToPointParams(false, MID), false);
 
         clamp_mogo();
 
-        intake(100);
+        delay(500);
+
+        intake();
+
+        delay(500);
+
+        chassis.turnToPoint(-22, -47, 1500, TurnToPointParams(true, AngularDirection::AUTO, ACCURATE), false);
+        chassis.moveToPoint(-22, -47, 1000, MoveToPointParams(true, FAST), false);
+
+        // chassis.moveToPoint(-20.5, -55, 3000, MoveToPointParams(true, MID), false);
 
         delay(1000);
-
-        chassis.turnToHeading(180, 1000, TurnToHeadingParams(AngularDirection::CCW_COUNTERCLOCKWISE, MID), false);
-
-        c::motor_move_velocity(HOOKS, 0);
-
-        intake(100);
-
-        chassis.moveToPoint(-20.5, -55, 3000, MoveToPointParams(true, MID), false);
-
-        delay(1500);
 
         activate_corner_arm();
 
         c::motor_move_velocity(HOOKS, 0);
 
-        chassis.moveToPose(-63.5, -65, 270, 1500, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
+        chassis.moveToPose(-45, -60, 90, 1000, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
+        chassis.moveToPose(-63.5, -63.5, 120, 2000, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
 
         chassis.turnToPoint(0, 0, 2000, TurnToPointParams(true, AngularDirection::CCW_COUNTERCLOCKWISE), false);
 
-        left_motor_group.move(-127);
-        right_motor_group.move(-127);
+        // left_motor_group.move(-127);
+        // right_motor_group.move(-127);
 
-        delay(400);
+        // delay(400);
 
-        left_motor_group.brake();
-        right_motor_group.brake();
+        // left_motor_group.brake();
+        // right_motor_group.brake();
+
+        // release_mogo();
+
+        // left_motor_group.move(80);
+        // right_motor_group.move(80);
+
+        // delay(250);
+
+        // left_motor_group.brake();
+        // right_motor_group.brake();
     }
 
     void blue_plus_side_sweep() {
+        chassis.setPose(Pose(54, -20, 90));
+
+        chassis.moveToPoint(22, -20, 2000, MoveToPointParams(false, MID), false);
+
+        clamp_mogo();
+
+        delay(500);
+
+        intake();
+
+        delay(500);
+
+        chassis.turnToPoint(22, -47, 1500, TurnToPointParams(true, AngularDirection::AUTO, ACCURATE), false);
+        chassis.moveToPoint(22, -47, 1000, MoveToPointParams(true, FAST), false);
+
+        // chassis.moveToPoint(-20.5, -55, 3000, MoveToPointParams(true, MID), false);
+
+        delay(1000);
+
+        activate_corner_arm();
+
+        c::motor_move_velocity(HOOKS, 0);
+
+        chassis.moveToPose(45, -60, -90, 1000, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
+        chassis.moveToPose(63.5, -63.5, -120, 2000, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
+
+        chassis.turnToPoint(0, 0, 2000, TurnToPointParams(true, AngularDirection::CCW_COUNTERCLOCKWISE), false);
+
+        return;
+
         chassis.setPose(Pose(58, -12.5, 0));
 
         chassis.moveToPoint(58, -0.5, 4000, MoveToPointParams(true, ACCURATE), false);
 
         outtake();
         delay(150);
-        stop_intake();
+        stop_intake(); 
+
+        raise_intake();
 
         chassis.turnToHeading(270, 2000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE / 2), false);
 
         left_motor_group.move(-20);
         right_motor_group.move(-20);
 
-        delay(200);
+        delay(300);
 
         left_motor_group.brake();
         right_motor_group.brake();
 
         begin_intake(1000, false, nullptr);
 
-        raise_intake();
-
-        begin_intake(250, true, [=]() {
+        begin_intake(1000, true, [=]() {
             lower_intake();
         });
 
-        chassis.moveToPoint(46, -4, 2000, MoveToPointParams(true, ACCURATE), false);
+        chassis.moveToPoint(45, -3, 2000, MoveToPointParams(true, ACCURATE), false);
 
         begin_intake(500, false, nullptr);
 
@@ -219,7 +275,7 @@ namespace auton {
 
         c::motor_move_velocity(HOOKS, 0);
 
-        chassis.moveToPose(63.5, -65, 90, 1500, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
+        chassis.moveToPose(63.5, -65, -90, 1500, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
 
         chassis.turnToPoint(0, 0, 2000, TurnToPointParams(true, AngularDirection::CCW_COUNTERCLOCKWISE), false);
 
@@ -248,25 +304,25 @@ namespace auton {
         delay(150);
         stop_intake();
 
+        raise_intake();
+
         chassis.turnToHeading(270, 2000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE / 2), false);
 
         left_motor_group.move(-20);
         right_motor_group.move(-20);
 
-        delay(400);
+        delay(300);
 
         left_motor_group.brake();
         right_motor_group.brake();
 
         begin_intake(1000, false, nullptr);
 
-        raise_intake();
-
-        begin_intake(250, true, [=]() {
+        begin_intake(1000, true, [=]() {
             lower_intake();
         });
 
-        chassis.moveToPoint(46, -4, 2000, MoveToPointParams(true, ACCURATE), false);
+        chassis.moveToPoint(45, -3, 2000, MoveToPointParams(true, ACCURATE), false);
 
         begin_intake(500, false, nullptr);
 
@@ -292,9 +348,9 @@ namespace auton {
 
         intake(100);
 
-        chassis.moveToPoint(20.5, -55, 3000, MoveToPointParams(true, MID), false);
+        chassis.moveToPoint(20.5, -50, 3000, MoveToPointParams(true, MID), false);
 
-        delay(1500);
+        delay(1000);
 
         Task bruh([=]() {
             delay(1000);
@@ -316,27 +372,27 @@ namespace auton {
 
         outtake();
         delay(150);
-        stop_intake();
+        stop_intake(); 
 
-        chassis.turnToHeading(90, 2000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE / 2), false);
+        raise_intake();
+
+        chassis.turnToHeading(-270, 2000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE / 2), false);
 
         left_motor_group.move(-20);
         right_motor_group.move(-20);
 
-        delay(400);
+        delay(300);
 
         left_motor_group.brake();
         right_motor_group.brake();
 
         begin_intake(1000, false, nullptr);
 
-        raise_intake();
-
-        begin_intake(250, true, [=]() {
+        begin_intake(1000, true, [=]() {
             lower_intake();
         });
 
-        chassis.moveToPoint(-46, -4, 2000, MoveToPointParams(true, ACCURATE), false);
+        chassis.moveToPoint(-45, -3, 2000, MoveToPointParams(true, ACCURATE), false);
 
         begin_intake(500, false, nullptr);
 
@@ -348,7 +404,7 @@ namespace auton {
             c::motor_move_velocity(HOOKS, 0);
         });
 
-        chassis.moveToPose(-26.5, -22.7, 315, 2500, MoveToPoseParams(false, 0, 0.6, FAST), false);
+        chassis.moveToPose(-26.5, -22.7, -45, 2500, MoveToPoseParams(false, 0, 0.6, FAST), false);
 
         clamp_mogo();
 
@@ -356,15 +412,15 @@ namespace auton {
 
         delay(1000);
 
-        chassis.turnToHeading(180, 1000, TurnToHeadingParams(AngularDirection::CCW_COUNTERCLOCKWISE, MID), false);
+        chassis.turnToHeading(-180, 1000, TurnToHeadingParams(AngularDirection::CCW_COUNTERCLOCKWISE, MID), false);
 
         c::motor_move_velocity(HOOKS, 0);
 
         intake(100);
 
-        chassis.moveToPoint(-20.5, -55, 3000, MoveToPointParams(true, MID), false);
+        chassis.moveToPoint(-20.5, -50, 3000, MoveToPointParams(true, MID), false);
 
-        delay(1500);
+        delay(1000);
 
         Task bruh([=]() {
             delay(1000);
@@ -392,8 +448,20 @@ namespace auton {
         delay(500);
 
         chassis.turnToPoint(-22, 47, 1500, TurnToPointParams(true, AngularDirection::AUTO, ACCURATE), false);
-        chassis.moveToPoint(-22, 47, 2000, MoveToPointParams(true, FAST), false);
+        chassis.moveToPoint(-22, 47, 1000, MoveToPointParams(true, FAST), false);
 
+        chassis.turnToPoint(-18, 0, 2000, TurnToPointParams(true, AngularDirection::AUTO, ACCURATE), false);
+
+        raise_intake();
+        stop_intake();
+
+        chassis.moveToPoint(-18, 0, 4000, MoveToPointParams(true, MID), false);
+
+        lower_intake();
+
+        return;
+
+        // 4 ring stuff
         delay(1000);
 
         chassis.turnToPoint(-3.5, 57, 1000, TurnToPointParams(true, AngularDirection::AUTO), false);
@@ -416,13 +484,7 @@ namespace auton {
 
         chassis.moveToPoint(-23, 47, 2000, MoveToPointParams(false, FAST), false);
 
-        chassis.turnToPoint(-18, 0, 2000, TurnToPointParams(true, AngularDirection::AUTO, ACCURATE), false);
-
-        raise_intake();
-
-        chassis.moveToPoint(-18, 0, 4000, MoveToPointParams(true, MID), false);
-
-        lower_intake();
+        
     }
 
     void blue_negative() {
@@ -439,37 +501,18 @@ namespace auton {
         delay(500);
 
         chassis.turnToPoint(22, 47, 1500, TurnToPointParams(true, AngularDirection::AUTO, ACCURATE), false);
-        chassis.moveToPoint(22, 47, 2000, MoveToPointParams(true, FAST), false);
-
-        delay(1000);
-
-        chassis.turnToPoint(3.5, 57, 1000, TurnToPointParams(true, AngularDirection::AUTO), false);
-        chassis.moveToPoint(-1, 55, 2000, MoveToPointParams(true, MID), false);
-
-        left_motor_group.move(-60);
-        right_motor_group.move(-60);
-
-        delay(250);
-
-        left_motor_group.brake();
-        right_motor_group.brake();
-
-        delay(1000);
-
-        chassis.turnToPoint(-1, 45, 1000, TurnToPointParams(true, AngularDirection::AUTO), false);
-        chassis.moveToPoint(-1, 43, 2000, MoveToPointParams(true, MID), false);
-        
-        delay(1000);
-
-        chassis.moveToPoint(23, 47, 2000, MoveToPointParams(false, FAST), false);
+        chassis.moveToPoint(22, 47, 1000, MoveToPointParams(true, FAST), false);                                                            
 
         chassis.turnToPoint(18, 0, 2000, TurnToPointParams(true, AngularDirection::AUTO, ACCURATE), false);
 
+         stop_intake();
         raise_intake();
 
         chassis.moveToPoint(18, 0, 4000, MoveToPointParams(true, MID), false);
 
         lower_intake();
+
+        return;
     }
 
     /*
@@ -502,25 +545,57 @@ namespace auton {
 
         begin_intake(500, false, nullptr);
 
-        chassis.moveToPose(-50, -22, 310, 3000, MoveToPoseParams(false, 0, 0.6, MID), false); //Move to Mogo
+        left_motor_group.move(80);
+        right_motor_group.move(80);
+
+        delay(50);
+
+        left_motor_group.brake();
+        right_motor_group.brake();
+
+        chassis.moveToPose(-50, -22, 310, 3000, MoveToPoseParams(false, FAST), false); //Move to Mogo
 
         clamp_mogo();
-        intake();
+        intake(115);
 
-        chassis.turnToHeading(90, 2000, TurnToHeadingParams(AngularDirection::AUTO, FAST), false); //Turn to first ring
+        chassis.turnToHeading(90, 1500, TurnToHeadingParams(AngularDirection::AUTO, FAST), false); //Turn to first ring
 
         chassis.moveToPoint(-23, -23, 2000, MoveToPointParams(true, MID), false); // ring 1
         chassis.moveToPoint(0, 0, 2000, MoveToPointParams(true, MID), false); //center ring
-        chassis.moveToPoint(23, -23, 2000, MoveToPointParams(true, MID), false); // ring 2
-        chassis.moveToPoint(23, -48, 2000, MoveToPointParams(true, MID), false); // ring 2
-        //raise arm
-        arm.prime();
-        chassis.moveToPose(0, -60, 180, 2000, MoveToPoseParams(true, MID), false);
-        //move to the wallstake
-        //chassis.turnToHeading(180, 2000, TurnToHeadingParams(AngularDirection::AUTO, FAST), false);
-        chassis.moveToPose(0, -70, 180, 1000, MoveToPoseParams(true, MID), false);
+        chassis.moveToPoint(23, -23, 2000, MoveToPointParams(true, MID, 1, 1), false); // ring 3
+        chassis.moveToPoint(23, -50, 1000, MoveToPointParams(true, MID), false); // ring 4
 
-        chassis.turnToHeading(270, 2000, TurnToHeadingParams(AngularDirection::AUTO, FAST), false); //Turn to first ring
+        chassis.moveToPose(0, -60, 180, 1000, MoveToPoseParams(true, MID), true);
+
+        delay(1500);
+        arm.prime(); //raise arm
+        delay(1000);
+        //move to the wallstake
+        // //chassis.turnToHeading(180, 2000, TurnToHeadingParams(AngularDirection::AUTO, FAST), false);
+        chassis.moveToPose(0, -70, 180, 1000, MoveToPoseParams(true, 0, 0.1, MID), false);
+
+        delay(1000);
+
+        stop_intake();
+
+        arm.score();
+
+        chassis.setPose(0, -61, chassis.getPose().theta);;
+
+        delay(1000);
+        arm.stow();
+        chassis.moveToPoint(0, -55, 1000, MoveToPointParams(false, MID));
+
+        chassis.turnToHeading(270, 500, TurnToHeadingParams(AngularDirection::AUTO, FAST), false); //Turn to ÷first ring
+        intake(115);
+        chassis.moveToPose(-58, -47, 270, 2000, MoveToPoseParams(true, 0, 0.1, MID), false);
+
+        chassis.turnToPoint(0, 0, 1000, TurnToPointParams(true, AngularDirection::AUTO, FAST), false);
+        chassis.moveToPoint(-65.5, -65.5, 1000, MoveToPointParams(false, MID), false);
+
+        release_mogo();
+
+        chassis.moveToPose(-47.5, 20, 180, 5000, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
 
         // left_motor_group.move(80);
         // right_motor_group.move(80);
@@ -530,13 +605,13 @@ namespace auton {
         // left_motor_group.brake();
         // right_motor_group.brake();
         //lokc in an score
-        stop_intake();
-        arm.score();
-        delay(3000);
-        intake();
+        // stop_intake();
+        // arm.score();
+        // delay(3000);
+        // intake();
 
 
-        chassis.moveToPoint(0, -48, 2000, MoveToPointParams(false, MID), false); // ring 2
+        // chassis.moveToPoint(0, -48, 2000, MoveToPointParams(false, MID), false); // ring 2
         /*chassis.moveToPoint(-20, -23.5, 2000, MoveToPointParams(true, MID), false);
         chassis.moveToPoint(-23.5, -51, 2000, MoveToPointParams(true, MID), false);
         chassis.moveToPoint(-63.5, -51, 2000, MoveToPointParams(true, MID), false);

@@ -11,7 +11,7 @@ using namespace pros;
 #define rest 0
 #define load 28
 #define inter 60
-#define limit 125
+#define limit 115
 
 class Arm {
     public:

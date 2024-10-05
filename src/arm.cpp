@@ -16,12 +16,11 @@ Arm::Arm(Motor* m, Rotation* r) {
 }
 
 void Arm::score() {
-    armTarget = limit;
+    armTarget = limit - 1;
 }
 
 void Arm::prime() {
     armTarget = load;
-    std::cout<< armTarget <<std::endl;
 }
 
 void Arm::with_ring() {
@@ -41,45 +40,27 @@ void Arm::toggle_l2() {
 }
 
 void Arm::hold_l1() {
-    std::cout<< "h1" <<std::endl;
     if (!canControl) return;
-    std::cout<< "h2" <<std::endl;
-    if (!canScore) return;
+    // if (!canScore) return;
     
-    std::cout<< "h4" <<std::endl;
-
     useArmPid = false;
-    std::cout<< "h5" <<std::endl;
     arm->move(127);
-    std::cout<< "h6" <<std::endl;
 }
 
 void Arm::release_l1() {
-    std::cout<< "r1" <<std::endl;
     arm->brake();
-    std::cout<< "r2" <<std::endl;
     useArmPid = true;
-    std::cout<< "r3" <<std::endl;
     canScore = true;
 
-    std::cout<< "r3" <<std::endl;
-
     if (armTarget == load) {
-        std::cout<< "r4" <<std::endl;
         armTarget = inter;
     } else {
-        std::cout<< "r5" <<std::endl;
         armTarget = load;
     }
 
-    std::cout<< "r6" <<std::endl;
-
     if (arm_pos() > inter) {
-        std::cout<< "r7" <<std::endl;
         armTarget = load;
     } 
-
-    std::cout<< "r8" <<std::endl;
 }
 
 void Arm::hold_l2() {
