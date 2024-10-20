@@ -137,9 +137,45 @@ namespace auton {
 
         // intake(100);
 
-        chassis.setPose(Pose(-54, -20, 270));
+        chassis.setPose(Pose(-58, -12.5, 0));
 
-        chassis.moveToPoint(-22, -20, 2000, MoveToPointParams(false, MID), false);
+        chassis.moveToPoint(-58, -0.5, 4000, MoveToPointParams(true, ACCURATE), false);
+
+        outtake();
+        delay(150);
+        stop_intake(); 
+
+        raise_intake();
+
+        chassis.turnToHeading(-270, 2000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE / 2), false);
+
+        left_motor_group.move(-20);
+        right_motor_group.move(-20);
+
+        delay(300);
+
+        left_motor_group.brake();
+        right_motor_group.brake();
+
+        begin_intake(1000, false, nullptr);
+
+        begin_intake(1000, true, [=]() {
+            lower_intake();
+        });
+
+        chassis.moveToPoint(-45, -3, 2000, MoveToPointParams(true, ACCURATE), false);
+
+        begin_intake(500, false, nullptr);
+
+        Task bruh100([=]() {
+            c::motor_move_velocity(HOOKS, 20);
+
+            delay(500);
+
+            c::motor_move_velocity(HOOKS, 0);
+        });
+
+        chassis.moveToPose(-26.5, -22.7, -45, 2500, MoveToPoseParams(false, 0, 0.6, FAST), false);
 
         clamp_mogo();
 
@@ -149,7 +185,7 @@ namespace auton {
 
         delay(500);
 
-        chassis.turnToPoint(-22, -47, 1500, TurnToPointParams(true, AngularDirection::AUTO, ACCURATE), false);
+        chassis.turnToPoint(-22, -47, 750, TurnToPointParams(true, AngularDirection::AUTO, ACCURATE), false);
         chassis.moveToPoint(-22, -47, 1000, MoveToPointParams(true, FAST), false);
 
         // chassis.moveToPoint(-20.5, -55, 3000, MoveToPointParams(true, MID), false);
@@ -161,10 +197,11 @@ namespace auton {
         c::motor_move_velocity(HOOKS, 0);
 
         chassis.moveToPose(-45, -60, 90, 1000, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
-        chassis.moveToPose(-63.5, -63.5, 120, 2000, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
+        chassis.moveToPoint(-63.5, -63.5, 500, MoveToPointParams(true, FAST), false);
 
-        chassis.turnToPoint(0, 0, 2000, TurnToPointParams(true, AngularDirection::CCW_COUNTERCLOCKWISE), false);
+        chassis.turnToPoint(0, 0, 1000, TurnToPointParams(true, AngularDirection::CCW_COUNTERCLOCKWISE), false);
 
+        return;
         // left_motor_group.move(-127);
         // right_motor_group.move(-127);
 
@@ -185,9 +222,45 @@ namespace auton {
     }
 
     void blue_plus_side_sweep() {
-        chassis.setPose(Pose(54, -20, 90));
+        chassis.setPose(Pose(58, -12.5, 0));
 
-        chassis.moveToPoint(22, -20, 2000, MoveToPointParams(false, MID), false);
+        chassis.moveToPoint(58, -0.5, 4000, MoveToPointParams(true, ACCURATE), false);
+
+        outtake();
+        delay(150);
+        stop_intake();
+
+        raise_intake();
+
+        chassis.turnToHeading(270, 2000, TurnToHeadingParams(AngularDirection::AUTO, ACCURATE / 2), false);
+
+        left_motor_group.move(-20);
+        right_motor_group.move(-20);
+
+        delay(300);
+
+        left_motor_group.brake();
+        right_motor_group.brake();
+
+        begin_intake(1000, false, nullptr);
+
+        begin_intake(1000, true, [=]() {
+            lower_intake();
+        });
+
+        chassis.moveToPoint(45, -3, 2000, MoveToPointParams(true, ACCURATE), false);
+
+        begin_intake(500, false, nullptr);
+
+        Task bruh79([=]() {
+            c::motor_move_velocity(HOOKS, 20);
+
+            delay(500);
+
+            c::motor_move_velocity(HOOKS, 0);
+        });
+
+        chassis.moveToPose(26.5, -22.7, 45, 2500, MoveToPoseParams(false, 0, 0.6, FAST), false);
 
         clamp_mogo();
 
@@ -197,7 +270,7 @@ namespace auton {
 
         delay(500);
 
-        chassis.turnToPoint(22, -47, 1500, TurnToPointParams(true, AngularDirection::AUTO, ACCURATE), false);
+        chassis.turnToPoint(22, -47, 500, TurnToPointParams(true, AngularDirection::AUTO, ACCURATE), false);
         chassis.moveToPoint(22, -47, 1000, MoveToPointParams(true, FAST), false);
 
         // chassis.moveToPoint(-20.5, -55, 3000, MoveToPointParams(true, MID), false);
@@ -209,9 +282,23 @@ namespace auton {
         c::motor_move_velocity(HOOKS, 0);
 
         chassis.moveToPose(45, -60, -90, 1000, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
-        chassis.moveToPose(63.5, -63.5, -120, 2000, MoveToPoseParams(true, 0, 0.6, FAST, FAST), false);
+        // chassis.moveToPose(63.5, -63.5, -120, 2000, MoveToPoseParams(true, 0, 0.3, FAST, FAST), false);
+        chassis.moveToPoint(63.5, -63.5, 500, MoveToPointParams(true, FAST), false);
 
-        chassis.turnToPoint(0, 0, 2000, TurnToPointParams(true, AngularDirection::CCW_COUNTERCLOCKWISE), false);
+        chassis.turnToPoint(0, 0, 1000, TurnToPointParams(true, AngularDirection::CCW_COUNTERCLOCKWISE), false);
+
+        // left_motor_group.move(-80);
+        // right_motor_group.move(-80);
+
+        // delay(500);
+
+        // left_motor_group.brake();
+        // right_motor_group.brake();
+
+        // release_mogo();
+
+
+
 
         return;
 
